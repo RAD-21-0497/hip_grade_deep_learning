@@ -1,0 +1,35 @@
+# use a fixed random seed to guarantee that when you run the code twice you will get the same outcome
+manual_seed: 0
+device: "cuda: 0"
+exp: "train_hip_classification_7cls"
+num_class: 7
+class_name: ["Normal", "OA_I", "OA_II", "OA_III", "ONFH_II", "ONFH_III", "ONFH_IV"] # for 7 class
+#class_name: ['Normal', "OA", "ONFH"]
+#class_weight: [1. , 1. , 1. ]
+class_weight: [1,1.3,1.1,1.5,1.2,1,1.5] # for 7 class
+class_num: [5000, 2018, 1120, 1743, 4439, 2490, 1993] #for 7 class
+#class_num: [35000, 10083, 11858]
+model_save_path: "./models/hip_classification_7cls_resize256"
+resume: False
+checkpoint: "./models/hip_classification_7cls_resize256/epoch_.pth"
+# trainer configuration
+trainer:
+  max_num_epochs: 100
+# optimizer configuration
+optimizer:
+  # initial learning rate
+  learning_rate: 0.0002
+  # weight decay
+  weight_decay: 0.0001
+# loss function configuration
+# data loaders configuration
+dataloaders:
+  # class of the HDF5 dataset, currently StandardHDF5Dataset and LazyHDF5Dataset are supported.
+  # When using LazyHDF5Dataset make sure to set `num_workers = 1`, due to a bug in h5py which corrupts the data
+  # when reading from multiple threads.
+  data_path: "../data/512_2-1_train_3cls/"
+  mean_std: "0.605,0.156"
+  resize: 256
+  # batch dimension; if number of GPUs is N > 1, then a batch_size of N * batch_size will automatically be taken for DataParallel
+  batch_size: 64
+  # how many subprocesses to use for data loading
